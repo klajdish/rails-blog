@@ -1,0 +1,17 @@
+<h1>Articles Listing Page</h1>
+<table>
+  <tr>
+    <th>title</th>
+    <th>description</th>
+    <th>Actions</th>
+  </tr>
+  <% @articles.each do |article| %>
+    <tr>
+      <td><%= article.title %></td>
+      <td><%= article.description %></td>
+      <td>View</td>
+      <td><a href="<%= edit_article_path(article.id)%>">Edit</a></td>
+      <td>Delete</td>
+    </tr>
+  <% end %>
+</table>
