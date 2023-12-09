@@ -1,8 +1,8 @@
 class ArticlesController < ApplicationController
+  before_action :set_article, only: [:edit, :update, :show, :destroy]
   def show
     # render plain: params;
     # abort params.inspect
-    @article = Article.find(params[:id])
   end
 
   def index
@@ -10,10 +10,11 @@ class ArticlesController < ApplicationController
   end
 
   def new
+    @article = Article.new
   end
 
   def create
-    @article = Article.new(params.require(:article).permit(:title, :description))
+    @article = Article.new(article_params)
     @test = '123'
 
     if @article.save
@@ -25,17 +26,35 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id]);
   end
 
   def update
-    @article = Article.find(params[:id])
-    result = @article.update(params.require(:article).permit(:title, :description));
+    result = @article.update(article_params)
 
     if result
-      redirect_to @article
+      flash[:notice] = "Updated Succesfully"
+      redirect_to articles_path
     else
+      flash[:notice] = "Something went wrong"
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    if @article.destroy
+      flash[:notice] = "Deleted Succesfully"
+    else
+      flash[:notice] = "Something went wrong"
+    end
+    redirect_to articles_path
+  end
+
+  private
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :description)
   end
 end
